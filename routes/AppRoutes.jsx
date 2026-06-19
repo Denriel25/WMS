@@ -14,15 +14,18 @@ import Notifications from "../Admin/Notifications";
 import ActivityLogs from "../Admin/ActivityLogs";
 import AccessibilityPage from "../Admin/Accessibility";
 import SettingsPage from "../Admin/Settings";
+import AdminLibrary from "../Admin/AdminLibrary";
 
 import StaffDashboard from "../staff/StaffDashboard";
 import StaffInventory from "../staff/StaffInventory";
 import StaffStockIn from "../staff/StaffStockIn";
 import StaffStockOut from "../staff/StaffStockOut";
 import StaffHistory from "../staff/StaffHistory";
+import StaffLibrary from "../staff/StaffLibrary";
 
 import AdminLayout from "../components/AdminLayout";
 import StaffLayout from "../components/StaffLayout";
+import StudentLayout from "../components/StudentLayout";
 import ProtectedRoute from "./ProtectedRoute";
 import PublicRoute from "./PublicRoute";
 import StudentDashboard from "../student/StudentDashboard";
@@ -208,12 +211,24 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/staff/library"
+          element={
+            <ProtectedRoute allowedRole="staff">
+              <StaffLayout>
+                <StaffLibrary />
+              </StaffLayout>
+            </ProtectedRoute>
+          }
+        />
 
         <Route
           path="/student/dashboard"
           element={
             <ProtectedRoute allowedRole="student">
-              <StudentDashboard />
+              <StudentLayout>
+                <StudentDashboard />
+              </StudentLayout>
             </ProtectedRoute>
           }
         />
@@ -221,7 +236,9 @@ function AppRoutes() {
           path="/student/inventory"
           element={
             <ProtectedRoute allowedRole="student">
-              <StudentInventory />
+              <StudentLayout>
+                <StudentInventory />
+              </StudentLayout>
             </ProtectedRoute>
           }
         />
@@ -229,7 +246,9 @@ function AppRoutes() {
           path="/student/history"
           element={
             <ProtectedRoute allowedRole="student">
-              <StudentHistory />
+              <StudentLayout>
+                <StudentHistory />
+              </StudentLayout>
             </ProtectedRoute>
           }
         />
@@ -237,7 +256,19 @@ function AppRoutes() {
           path="/student/library"
           element={
             <ProtectedRoute allowedRole="student">
-              <StudentLibrary />
+              <StudentLayout>
+                <StudentLibrary />
+              </StudentLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/library"
+          element={
+            <ProtectedRoute allowedRole="admin">
+              <AdminLayout>
+                <AdminLibrary />
+              </AdminLayout>
             </ProtectedRoute>
           }
         />
