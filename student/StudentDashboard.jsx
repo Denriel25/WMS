@@ -96,6 +96,14 @@ function StudentDashboard() {
         })}
       </div>
 
+      <div className="student-library-card">
+        <h2>Library Access</h2>
+        <p>Open the library student portal for book search, borrowing, and account management.</p>
+        <button className="student-action-btn" onClick={() => window.location.href = "/student/library"}>
+          Go to Library Portal
+        </button>
+      </div>
+
       <div className="student-activity-box">
         <h2>Recent Activity</h2>
         <table className="student-table">

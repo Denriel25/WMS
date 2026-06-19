@@ -98,6 +98,25 @@
   font-weight: 600;
 }
 
+.student-action-btn,
+.student-secondary-btn {
+  border: none;
+  border-radius: 12px;
+  padding: 14px 24px;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.student-action-btn {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.student-secondary-btn {
+  background: #f3f4f6;
+  color: #111827;
+}
+
 .student-search-box {
   display: flex;
   align-items: center;
@@ -133,4 +152,56 @@
 
 .inventory-empty-state p {
   margin: 0;
+}
+
+.student-library-card {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 8px 24px rgba(16, 24, 40, 0.04);
+}
+
+.student-library-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.student-action-btn,
+.student-secondary-btn {
+  border: none;
+  border-radius: 12px;
+  padding: 14px 24px;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.student-action-btn {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.student-secondary-btn {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.student-library-link {
+  margin-top: 24px;
+  padding: 18px;
+  border-radius: 14px;
+  background: #f8fafc;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+}
+
+.student-library-link p {
+  margin: 0 0 8px;
+  color: #4b5563;
+}
+
+.student-library-link a {
+  color: #2563eb;
+  text-decoration: none;
 }

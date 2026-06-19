@@ -28,6 +28,7 @@ import PublicRoute from "./PublicRoute";
 import StudentDashboard from "../student/StudentDashboard";
 import StudentInventory from "../student/StudentInventory";
 import StudentHistory from "../student/StudentHistory";
+import StudentLibrary from "../student/StudentLibrary";
 
 function AppRoutes() {
   return (
@@ -229,6 +230,14 @@ function AppRoutes() {
           element={
             <ProtectedRoute allowedRole="student">
               <StudentHistory />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/student/library"
+          element={
+            <ProtectedRoute allowedRole="student">
+              <StudentLibrary />
             </ProtectedRoute>
           }
         />
