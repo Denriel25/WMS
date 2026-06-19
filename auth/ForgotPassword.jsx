@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mail, ArrowLeft, SendHorizonal } from "lucide-react";
+import { supabase } from "../supabaseClient";
 import "./Login.css";
 
 function ForgotPassword() {
@@ -10,7 +11,7 @@ function ForgotPassword() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  function handleSubmit(e) {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!email.trim()) {
@@ -26,11 +27,19 @@ function ForgotPassword() {
     setError("");
     setIsLoading(true);
 
-    setTimeout(() => {
-      setIsLoading(false);
-      setIsSubmitted(true);
-    }, 900);
-  }
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+
+    setIsLoading(false);
+
+    if (error) {
+      setError(error.message);
+      return;
+    }
+
+    setIsSubmitted(true);
+  };
 
   return (
     <div className="login-container">

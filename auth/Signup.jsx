@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserPlus } from "lucide-react";
+import { supabase } from "../supabaseClient";
 import "./Login.css";
 
 function Signup() {
@@ -50,34 +51,35 @@ function Signup() {
     try {
       setIsLoading(true);
 
-      const response = await fetch("http://127.0.0.1/wms-api/signup.php", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
+      const { data, error } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+        options: {
+          data: {
+            name: formData.name,
+            role: formData.role,
+          },
         },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          password: formData.password,
-          role: formData.role
-        })
       });
 
-      const data = await response.json();
-
-      if (data.message !== "Signup success") {
-        setMessage(data.message);
+      if (error) {
+        setMessage(error.message);
         setIsLoading(false);
         return;
       }
 
-      setMessage("Signup success. You can now login.");
+      if (!data.user) {
+        setMessage("Signup success. Check your email for verification.");
+      } else {
+        setMessage("Signup success. You can now login.");
+      }
 
       setTimeout(() => {
         navigate("/");
       }, 1200);
     } catch (error) {
-      setMessage("Failed to connect to backend.");
+      console.error("Signup error:", error);
+      setMessage(error?.message || "Signup failed. Please check your Supabase connection.");
     } finally {
       setIsLoading(false);
     }

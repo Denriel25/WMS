@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "../supabaseClient";
 import "./Login.css";
 
 function ResetPassword() {
@@ -8,8 +9,10 @@ function ResetPassword() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const token = new URLSearchParams(window.location.search).get("access_token") || "";
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!password || !confirmPassword) {
@@ -30,7 +33,27 @@ function ResetPassword() {
       return;
     }
 
+    if (!token) {
+      setError("Invalid reset link. Please request a new password reset.");
+      setMessage("");
+      return;
+    }
+
     setError("");
+    setIsLoading(true);
+
+    const { error } = await supabase.auth.updateUser(
+      { password },
+      { accessToken: token }
+    );
+
+    setIsLoading(false);
+
+    if (error) {
+      setError(error.message);
+      return;
+    }
+
     setMessage("Password reset successful.");
 
     setTimeout(() => {

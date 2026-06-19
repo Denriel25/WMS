@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff, ShieldCheck } from "lucide-react";
+import { supabase } from "../supabaseClient";
 import "./Login.css";
 
 function Login() {
@@ -39,38 +40,35 @@ function Login() {
     try {
       setIsLoading(true);
 
-      const response = await fetch("http://127.0.0.1/wms-api/login.php", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          email,
-          password
-        })
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
       });
 
-      const data = await response.json();
-
-      if (data.message !== "Login success") {
-        setMessage(data.message);
+      if (error || !data.user) {
+        setMessage(error?.message || "Login failed.");
         setIsLoading(false);
         return;
       }
 
-      localStorage.setItem("isLoggedIn", "true");
-      localStorage.setItem("userRole", data.user.role);
-      localStorage.setItem("userEmail", data.user.email);
-      localStorage.setItem("userName", data.user.name);
-      localStorage.setItem("userId", data.user.id);
+      const user = data.user;
+      const userRole = user.user_metadata?.role || "staff";
+      const userName = user.user_metadata?.name || "";
 
-      if (data.user.role === "admin") {
+      localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("userRole", userRole);
+      localStorage.setItem("userEmail", user.email || "");
+      localStorage.setItem("userName", userName);
+      localStorage.setItem("userId", user.id);
+
+      if (userRole === "admin") {
         navigate("/admin/dashboard");
       } else {
         navigate("/staff/dashboard");
       }
     } catch (error) {
-      setMessage("Failed to connect to backend.");
+      console.error("Login error:", error);
+      setMessage(error?.message || "Login failed. Please check your Supabase connection.");
     } finally {
       setIsLoading(false);
     }
