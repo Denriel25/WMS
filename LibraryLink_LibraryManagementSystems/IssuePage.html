@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Issue Page</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Hammersmith+One&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(160deg, #FFF6EF 0%, #FAE9DD 60%, #EECBAD 100%);
+      min-height: 100vh;
+      color: #5C3020;
+    }
+
+    .app {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .tabs {
+      display: flex;
+      background: linear-gradient(90deg, rgba(248,234,223,0.97) 0%, rgba(220,187,169,0.5) 100%);
+      border-bottom: 1px solid rgba(154,84,53,0.12);
+      backdrop-filter: blur(8px);
+      flex-shrink: 0;
+    }
+
+    .tab-btn {
+      position: relative;
+      padding: 16px 28px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-family: "Poppins", sans-serif;
+      font-size: 14px;
+      color: #BCB1AB;
+      font-weight: 400;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn.active {
+      color: #9A5435;
+      font-weight: 500;
+    }
+
+    .tab-btn .underline {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 2px;
+      border-radius: 999px 999px 0 0;
+      background: linear-gradient(90deg, #9A5435, #C4784F);
+    }
+
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px;
+    }
+
+    h2 {
+      font-family: "Hammersmith One", sans-serif;
+      font-size: 22px;
+      color: #5C3020;
+      margin: 0 0 20px;
+    }
+
+    .card {
+      border-radius: 24px;
+      padding: 24px;
+      background: linear-gradient(160deg, rgba(255,246,239,0.9) 0%, rgba(248,234,223,0.85) 100%);
+      border: 1px solid rgba(220,187,169,0.45);
+      box-shadow: 0 4px 24px rgba(154,84,53,0.08);
+      backdrop-filter: blur(12px);
+    }
+
+    .max-lg {
+      max-width: 32rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    label {
+      font-size: 11px;
+      color: #9A8578;
+      letter-spacing: 0.04em;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 14px;
+      outline: none;
+      border: 1px solid rgba(220,187,169,0.55);
+      background: rgba(255,246,239,0.8);
+      font-size: 14px;
+      color: #5C3020;
+      font-family: "Poppins", sans-serif;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .primary-btn, .secondary-btn {
+      border: none;
+      cursor: pointer;
+      border-radius: 14px;
+      font-family: "Poppins", sans-serif;
+      font-size: 14px;
+      transition: opacity 0.2s ease;
+    }
+
+    .primary-btn:hover {
+      opacity: 0.85;
+    }
+
+    .primary-btn {
+      flex: 1;
+      padding: 12px 16px;
+      background: linear-gradient(135deg, #AA958A 0%, #9A8578 100%);
+      color: #FFF6EF;
+      box-shadow: 0 4px 14px rgba(154,84,53,0.2);
+    }
+
+    .secondary-btn {
+      padding: 12px 20px;
+      background: rgba(220,187,169,0.35);
+      color: #6B6464;
+      border: 1px solid rgba(220,187,169,0.5);
+    }
+
+    .note {
+      margin-top: 16px;
+      border-radius: 16px;
+      padding: 16px;
+      background: linear-gradient(135deg, rgba(154,84,53,0.06) 0%, rgba(235,192,155,0.1) 100%);
+      border: 1px solid rgba(154,84,53,0.12);
+      font-size: 12px;
+      color: #877368;
+      line-height: 1.6;
+    }
+
+    .note strong {
+      color: #9A5435;
+    }
+
+    .table-card {
+      border-radius: 24px;
+      overflow: hidden;
+      background: linear-gradient(160deg, rgba(255,246,239,0.9) 0%, rgba(248,234,223,0.85) 100%);
+      border: 1px solid rgba(220,187,169,0.45);
+      box-shadow: 0 4px 24px rgba(154,84,53,0.08);
+      backdrop-filter: blur(10px);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead tr {
+      background: linear-gradient(90deg, rgba(220,187,169,0.5) 0%, rgba(235,192,155,0.3) 100%);
+    }
+
+    th {
+      text-align: left;
+      padding: 12px 16px;
+      font-size: 11px;
+      color: #9A8578;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    td {
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(220,187,169,0.2);
+    }
+
+    tbody tr:nth-child(even) {
+      background: rgba(250,233,221,0.4);
+    }
+
+    .student-id {
+      font-size: 12px;
+      color: #877368;
+    }
+
+    .student-name {
+      font-size: 13px;
+      color: #5C3020;
+      font-weight: 500;
+    }
+
+    .book {
+      font-size: 12px;
+      color: #6B6464;
+    }
+
+    .date {
+      font-size: 12px;
+      color: #BCB1AB;
+    }
+
+    .fine {
+      font-size: 12px;
+    }
+
+    .fine.overdue {
+      color: #9A5435;
+      font-weight: 600;
+    }
+
+    .fine.none {
+      color: #BCB1AB;
+      font-weight: 400;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .status.overdue {
+      background: linear-gradient(135deg, rgba(154,84,53,0.12), rgba(196,120,79,0.08));
+      color: #9A5435;
+    }
+
+    .status.active {
+      background: rgba(135,115,104,0.1);
+      color: #877368;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="tabs">
+      <button class="tab-btn active" onclick="setTab('issue')" id="tab-issue">
+        Issue Book
+        <span class="underline"></span>
+      </button>
+      <button class="tab-btn" onclick="setTab('records')" id="tab-records">
+        Issue Records
+      </button>
+    </div>
+
+    <div class="content">
+      <div id="issue-panel" class="max-lg">
+        <h2>Issue a Book</h2>
+
+        <div class="card">
+          <div class="form-group">
+            <label>STUDENT ID</label>
+            <input type="text" id="studentId" placeholder="e.g. CS-2021-001" />
+          </div>
+
+          <div class="form-group">
+            <label>STUDENT NAME</label>
+            <input type="text" id="studentName" placeholder="Enter full name" />
+          </div>
+
+          <div class="form-group">
+            <label>BOOK TITLE</label>
+            <input type="text" id="bookTitle" placeholder="Enter book title" />
+          </div>
+
+          <div class="form-group">
+            <label>ISSUE DATE</label>
+            <input type="date" id="issueDate" />
+          </div>
+
+          <div class="form-group">
+            <label>DUE DATE (RETURN)</label>
+            <input type="date" id="dueDate" />
+          </div>
+
+          <div class="btn-row">
+            <button class="primary-btn" type="button">Issue Book</button>
+            <button class="secondary-btn" type="button" onclick="clearForm()">Clear</button>
+          </div>
+        </div>
+
+        <div class="note">
+          <p style="margin: 0;">
+            <strong>Note:</strong> Fine is calculated at PKR 10/day for delayed returns. Outstanding fines must be cleared before a new book is issued.
+          </p>
+        </div>
+      </div>
+
+      <div id="records-panel" style="display:none;">
+        <h2>Issue Records</h2>
+
+        <div class="table-card">
+          <table>
+            <thead>
+              <tr>
+                <th>Student ID</th>
+                <th>Name</th>
+                <th>Book</th>
+                <th>Issue Date</th>
+                <th>Due Date</th>
+                <th>Fine (PKR)</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="records-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const issuedBooks = [
+      { id: 1, studentId: "CS-2021-001", studentName: "Aisha Malik", book: "Introduction to Algorithms", issueDate: "Jun 01, 2026", dueDate: "Jun 15, 2026", fine: 0, status: "active" },
+      { id: 2, studentId: "CS-2021-042", studentName: "Rayan Ahmed", book: "Operating Systems", issueDate: "May 20, 2026", dueDate: "Jun 03, 2026", fine: 90, status: "overdue" },
+      { id: 3, studentId: "EE-2022-015", studentName: "Sara Khan", book: "University Physics", issueDate: "Jun 05, 2026", dueDate: "Jun 19, 2026", fine: 0, status: "active" },
+      { id: 4, studentId: "CS-2020-088", studentName: "Ali Hassan", book: "Data Structures", issueDate: "May 15, 2026", dueDate: "May 29, 2026", fine: 140, status: "overdue" },
+      { id: 5, studentId: "MA-2023-007", studentName: "Fatima Noor", book: "Linear Algebra", issueDate: "Jun 08, 2026", dueDate: "Jun 22, 2026", fine: 0, status: "active" },
+    ];
+
+    let currentTab = "issue";
+
+    function setTab(tab) {
+      currentTab = tab;
+      document.getElementById("issue-panel").style.display = tab === "issue" ? "block" : "none";
+      document.getElementById("records-panel").style.display = tab === "records" ? "block" : "none";
+
+      document.getElementById("tab-issue").classList.toggle("active", tab === "issue");
+      document.getElementById("tab-records").classList.toggle("active", tab === "records");
+
+      const issueUnderline = document.querySelector("#tab-issue .underline");
+      if (issueUnderline) issueUnderline.style.display = tab === "issue" ? "block" : "none";
+
+      const recordsUnderline = document.querySelector("#tab-records .underline");
+      if (recordsUnderline) recordsUnderline.remove();
+
+      if (tab === "records" && !document.querySelector("#tab-records .underline")) {
+        const span = document.createElement("span");
+        span.className = "underline";
+        document.getElementById("tab-records").appendChild(span);
+      }
+    }
+
+    function clearForm() {
+      document.getElementById("studentId").value = "";
+      document.getElementById("studentName").value = "";
+      document.getElementById("bookTitle").value = "";
+      document.getElementById("issueDate").value = "";
+      document.getElementById("dueDate").value = "";
+    }
+
+    function renderRecords() {
+      const tbody = document.getElementById("records-body");
+      tbody.innerHTML = issuedBooks.map((row, i) => `
+        <tr style="background:${i % 2 === 0 ? "transparent" : "rgba(250,233,221,0.4)"};">
+          <td class="student-id">${row.studentId}</td>
+          <td class="student-name">${row.studentName}</td>
+          <td class="book">${row.book}</td>
+          <td class="date">${row.issueDate}</td>
+          <td class="date">${row.dueDate}</td>
+          <td class="fine ${row.fine > 0 ? "overdue" : "none"}">${row.fine > 0 ? `PKR ${row.fine}` : "—"}</td>
+          <td>
+            <span class="status ${row.status}">
+              ${row.status === "overdue" ? "Overdue" : "Active"}
+            </span>
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    renderRecords();
+  </script>
+</body>
+</html>
+<script type="module">
+import { createClient }
+from 'https://esm.sh/@supabase/supabase-js'
+
+const supabase = createClient(
+    'YOUR_SUPABASE_URL',
+    'YOUR_SUPABASE_ANON_KEY'
+)
+</script>

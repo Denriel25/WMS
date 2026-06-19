@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Library LINK - Admin Dashboard</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Hammersmith+One&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="./style.css" />
+
+  <style data-inline-style="app"> /* kept for layout-only; style.css provides animations/cute UI */
+    :root {
+
+
+      --bg: #f7efe9;
+      --panel: #ffffff;
+      --text: #3b2a22;
+      --text-secondary: #5c4a41;
+      --muted: #7b665d;
+      --accent: #9a5435;
+      --accent-light: #c4784f;
+      --accent-dark: #7a3f25;
+      --success: #4caf50;
+      --warning: #ff9800;
+      --error: #f44336;
+      --sidebar: #fff7f2;
+      --border: rgba(0,0,0,0.08);
+      --topbar-grad: linear-gradient(90deg,#9A5435 0%,#7A3F25 40%,#6B6464 100%);
+    }
+
+    html.dark {
+      --bg: #161311;
+      --panel: #211d1b;
+      --text: #f5e9e1;
+      --text-secondary: #d9ccc4;
+      --muted: #b9aaa1;
+      --accent: #c06a46;
+      --accent-light: #d88a63;
+      --accent-dark: #8d4b31;
+      --sidebar: #1f1a18;
+      --border: rgba(255,255,255,0.08);
+    }
+
+    * { 
+      box-sizing: border-box;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* ──────────────── LAYOUT ──────────────── */
+    .app {
+      display: flex;
+      height: 100vh;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .sidebar {
+      width: 280px;
+      background: var(--sidebar);
+      border-right: 1px solid var(--border);
+      padding: 20px 16px;
+      overflow-y: auto;
+      flex-shrink: 0;
+      transform: translateX(0);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+      position: relative;
+    }
+
+    .sidebar.hidden {
+      transform: translateX(-100%);
+      position: absolute;
+      height: 100%;
+      box-shadow: 2px 0 12px rgba(0,0,0,0.15);
+    }
+
+    .main {
+      flex: 1;
+      min-width: 0;
+      height: 100%;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ──────────────── TOPBAR ──────────────── */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      background: var(--topbar-grad);
+      border-bottom: 1px solid rgba(0,0,0,0.15);
+      box-shadow: 0 2px 16px rgba(92,48,32,0.3);
+      color: #fff6ef;
+      flex-shrink: 0;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .topbar-left, .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .title {
+      font-family: "Hammersmith One", sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 1.2;
+      margin: 0;
+      color: #fff;
+    }
+
+    .subtitle {
+      font-size: 11px;
+      margin: 0;
+      line-height: 1.3;
+      color: rgba(255,246,239,0.7);
+    }
+
+    /* ──────────────── BUTTONS ──────────────── */
+    .btn {
+      border: 1px solid rgba(255,255,255,0.25);
+      background: rgba(255,255,255,0.12);
+      color: #fff6ef;
+      border-radius: 10px;
+      padding: 8px 14px;
+      cursor: pointer;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      background: rgba(255,255,255,0.18);
+      border-color: rgba(255,255,255,0.35);
+      transform: translateY(-1px);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .icon-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: #fff6ef;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.2s ease;
+      padding: 0;
+    }
+
+    .icon-btn:hover {
+      background: rgba(255,255,255,0.18);
+      border-color: rgba(255,255,255,0.35);
+      transform: scale(1.05);
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg,rgba(255,255,255,0.25),rgba(255,255,255,0.12));
+      color: #fff6ef;
+      border: 2px solid rgba(255,255,255,0.35);
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      padding: 0;
+    }
+
+    .avatar:hover {
+      transform: scale(1.08);
+      border-color: rgba(255,255,255,0.5);
+    }
+
+    /* ──────────────── STATUS BAR ──────────────── */
+    .status-bar {
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      background: linear-gradient(90deg, rgba(154,84,53,0.08), rgba(196,120,79,0.06));
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--text-secondary);
+      flex-shrink: 0;
+      gap: 12px;
+      overflow-x: auto;
+    }
+
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      animation: pulse 2s infinite;
+      flex-shrink: 0;
+    }
+
+    .status-dot.connecting {
+      background: var(--warning);
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* ──────────────── CONTENT ──────────────── */
+    .content {
+      flex: 1;
+      overflow: auto;
+      padding: 28px 24px;
+      background: var(--bg);
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.06);
+    }
+
+    .page-placeholder {
+      min-height: 50vh;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .page-placeholder h2 {
+      color: var(--text);
+      margin-bottom: 8px;
+      font-size: 24px;
+    }
+
+    .page-placeholder p {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+      max-width: 400px;
+    }
+
+    /* ──────────────── SIDEBAR ──────────────── */
+    .sidebar h2 {
+      margin: 0 0 8px 0;
+      font-size: 20px;
+      font-family: "Hammersmith One", sans-serif;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sidebar-subtitle {
+      margin: 0 0 20px 0;
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+
+    .nav {
+      display: grid;
+      gap: 6px;
+      margin-bottom: 24px;
+    }
+
+    .nav-section {
+      margin-bottom: 20px;
+    }
+
+    .nav-section-title {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 12px 8px 6px;
+      letter-spacing: 0.8px;
+      margin: 0;
+    }
+
+    .nav a {
+      text-decoration: none;
+      color: var(--text-secondary);
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: transparent;
+      border: 1px solid transparent;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .nav a:hover {
+      background: rgba(154,84,53,0.08);
+      border-color: rgba(154,84,53,0.15);
+      color: var(--accent);
+    }
+
+    .nav a.active {
+      background: rgba(154,84,53,0.12);
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: inset -3px 0 0 var(--accent);
+    }
+
+    .nav-icon {
+      display: inline-block;
+      width: 18px;
+      text-align: center;
+      font-size: 16px;
+    }
+
+    /* ──────────────── RESPONSIVE ──────────────── */
+    .menu-toggle {
+      display: none;
+      position: relative;
+      width: 36px;
+      height: 36px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 10px;
+      cursor: pointer;
+      padding: 0;
+      transition: all 0.2s ease;
+    }
+
+    .menu-toggle:hover {
+      background: rgba(255,255,255,0.18);
+      border-color: rgba(255,255,255,0.35);
+    }
+
+    .menu-toggle span {
+      position: absolute;
+      width: 18px;
+      height: 2px;
+      background: #fff6ef;
+      border-radius: 1px;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .menu-toggle span:nth-child(1) { transform: translate(-50%, -6px); }
+    .menu-toggle span:nth-child(2) { transform: translate(-50%, -50%); }
+    .menu-toggle span:nth-child(3) { transform: translate(-50%, calc(-50% + 6px)); }
+
+    /* ──────────── FORMS ──────────── */
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="number"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 13px;
+      transition: border-color 0.2s ease;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(154,84,53,0.1);
+    }
+
+    /* ──────────── TABLES ──────────── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    table th {
+      text-align: left;
+      padding: 12px 0;
+      color: var(--text);
+      font-weight: 600;
+      border-bottom: 2px solid var(--border);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    table td {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+
+    table tr:hover {
+      background: rgba(154,84,53,0.03);
+    }
+
+    /* ──────────── SCROLLBAR ──────────── */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(0,0,0,0.05);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--accent);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--accent-dark);
+    }
+
+    html.dark ::-webkit-scrollbar-track {
+      background: rgba(255,255,255,0.05);
+    }
+
+    /* ──────────── RESPONSIVE DESIGN ──────────── */
+    @media (max-width: 1024px) {
+      .sidebar {
+        position: absolute;
+        height: 100vh;
+        left: 0;
+        top: 0;
+        max-width: 280px;
+        box-shadow: 2px 0 12px rgba(0,0,0,0.15);
+      }
+
+      .menu-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .topbar {
+        padding: 12px 12px;
+      }
+
+      .topbar-left {
+        gap: 8px;
+      }
+
+      .content {
+        padding: 20px 16px;
+      }
+
+      .panel {
+        padding: 20px 16px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .topbar {
+        flex-direction: column;
+        gap: 8px;
+        align-items: stretch;
+      }
+
+      .topbar-left,
+      .topbar-right {
+        width: 100%;
+      }
+
+      .title {
+        font-size: 16px;
+      }
+
+      .subtitle {
+        font-size: 10px;
+      }
+
+      .content {
+        padding: 16px 12px;
+      }
+
+      .panel {
+        padding: 16px 12px;
+        border-radius: 12px;
+      }
+
+      .status-bar {
+        padding: 0 12px;
+        font-size: 11px;
+        height: 32px;
+      }
+
+      .btn {
+        padding: 7px 12px;
+        font-size: 11px;
+      }
+
+      .icon-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+      }
+
+      .avatar {
+        width: 32px;
+        height: 32px;
+        font-size: 12px;
+      }
+
+      input[type="text"],
+      input[type="number"],
+      textarea {
+        font-size: 16px;
+      }
+
+      table {
+        font-size: 12px;
+      }
+
+      table th,
+      table td {
+        padding: 8px 0;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .topbar {
+        padding: 10px 8px;
+      }
+
+      .topbar-left,
+      .topbar-right {
+        gap: 6px;
+      }
+
+      .btn {
+        padding: 6px 10px;
+        font-size: 10px;
+      }
+
+      .sidebar {
+        width: 80vw;
+        max-width: 240px;
+      }
+
+      .content {
+        padding: 12px 8px;
+      }
+
+      .panel {
+        padding: 12px;
+      }
+
+      .page-placeholder {
+        min-height: 40vh;
+      }
+
+      .page-placeholder h2 {
+        font-size: 18px;
+      }
+
+      .title {
+        font-size: 14px;
+      }
+
+      input[type="text"],
+      button {
+        min-height: 44px;
+      }
+
+      .status-bar {
+        flex-direction: column;
+        gap: 4px;
+        height: auto;
+        padding: 8px 12px;
+      }
+    }
+
+    @media print {
+      .topbar,
+      .sidebar,
+      .status-bar {
+        display: none;
+      }
+
+      .content {
+        padding: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+            <h2>
+              <span style="font-size:20px;">Book</span>
+              Library LINK
+            </h2>
+
+      <p class="sidebar-subtitle">Admin Portal</p>
+
+
+      <!-- Main Navigation -->
+      <nav class="nav">
+        <a href="#dashboard" class="active" onclick="navigate(event)">
+          <span class="nav-icon">📊</span>
+          Dashboard
+        </a>
+        <a href="#books" onclick="navigate(event)">
+          <span class="nav-icon">📖</span>
+          Books & Catalog
+        </a>
+        <a href="#students" onclick="navigate(event)">
+          <span class="nav-icon">👥</span>
+          Students
+        </a>
+        <a href="#borrowing" onclick="navigate(event)">
+          <span class="nav-icon">📤</span>
+          Borrowing Records
+        </a>
+      </nav>
+
+      <!-- Management Section -->
+      <div class="nav-section">
+        <h3 class="nav-section-title">Management</h3>
+        <nav class="nav">
+          <a href="#librarians" onclick="navigate(event)">
+            <span class="nav-icon">👨‍💼</span>
+            Manage Librarians
+          </a>
+          <a href="#fines" onclick="navigate(event)">
+            <span class="nav-icon">💰</span>
+            Fine Management
+          </a>
+          <a href="#reports" onclick="navigate(event)">
+            <span class="nav-icon">📈</span>
+            Reports & Analytics
+          </a>
+        </nav>
+      </div>
+
+      <!-- System Section -->
+      <div class="nav-section">
+        <h3 class="nav-section-title">System</h3>
+        <nav class="nav">
+          <a href="#settings" onclick="navigate(event)">
+            <span class="nav-icon">⚙️</span>
+            Settings
+          </a>
+          <a href="#backup" onclick="navigate(event)">
+            <span class="nav-icon">💾</span>
+            Backup & Restore
+          </a>
+          <a href="#logs" onclick="navigate(event)">
+            <span class="nav-icon">📋</span>
+            System Logs
+          </a>
+        </nav>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main">
+      <!-- Top Bar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+          <div>
+            <h1 class="title">Dashboard</h1>
+            <p class="subtitle">Library LINK · Admin · Admin User</p>
+          </div>
+
+        </div>
+
+        <div class="topbar-right">
+          <button class="btn" title="Go to home" onclick="navigate({target: {getAttribute: () => '#dashboard'}})">
+            Home
+          </button>
+          <button class="icon-btn" id="darkToggle" title="Toggle dark mode" aria-label="Dark mode">
+            M
+          </button>
+          <button class="icon-btn" title="Notifications" aria-label="View notifications">
+            N
+          </button>
+          <span class="btn" style="cursor:default; pointer-events:none;">
+            <span id="currentDate"></span>
+          </span>
+          <button class="btn" title="Sign out">Sign out</button>
+          <button class="avatar" title="User profile">A</button>
+        </div>
+      </header>
+
+      <!-- Status Bar -->
+      <div class="status-bar">
+        <div class="status-indicator">
+          <span class="status-dot"></span>
+          <span>System Status: Connected</span>
+        </div>
+        <span style="font-size: 11px; color: var(--muted);">
+          Last sync: <span id="syncTime">Just now</span>
+        </span>
+      </div>
+
+      <!-- Main Content Area -->
+      <main class="content">
+        <div class="panel page-placeholder">
+          <div>
+            <h2>Welcome to Admin Dashboard</h2>
+            <p>Select a section from the sidebar to get started. Manage books, students, borrowing records, and system settings all from one place.</p>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    // ═══════════════════════════════════════════════════════════════
+    // LIBRARY LINK - ADMIN DASHBOARD
+    // Full responsive & functional UI with Backend API Integration
+    // ═══════════════════════════════════════════════════════════════
+
+    const API_BASE = "/make-server-fc61bfd1";
+
+    // ──────────── API UTILITIES ────────────
+    async function fetchAPI(endpoint) {
+      try {
+        const response = await fetch(`${API_BASE}${endpoint}`);
+        if (!response.ok) {
+          console.error(`API error: ${response.status} ${response.statusText}`);
+          return null;
+        }
+        return await response.json();
+      } catch (error) {
+        console.error("API Error:", error);
+        return null;
+      }
+    }
+
+    async function seedDatabase() {
+      try {
+        const response = await fetch(`${API_BASE}/seed`, { method: "POST" });
+        return await response.json();
+      } catch (error) {
+        console.log("Database already seeded or seeding error:", error);
+        return null;
+      }
+    }
+
+    // ──────────── STATE MANAGEMENT ────────────
+    const APP = {
+      currentPage: "dashboard",
+      sidebarOpen: window.innerWidth > 1024,
+      theme: localStorage.getItem("theme") || "light",
+
+      pages: {
+        dashboard: {
+          title: "Dashboard",
+          icon: "📊",
+          content: renderDashboard
+        },
+        books: {
+          title: "Books & Catalog",
+          icon: "📖",
+          content: renderBooks
+        },
+        students: {
+          title: "Students",
+          icon: "👥",
+          content: renderStudents
+        },
+        borrowing: {
+          title: "Borrowing Records",
+          icon: "📤",
+          content: renderBorrowing
+        },
+        librarians: {
+          title: "Manage Librarians",
+          icon: "👨‍💼",
+          content: renderLibrarians
+        },
+        fines: {
+          title: "Fine Management",
+          icon: "💰",
+          content: renderFines
+        },
+        reports: {
+          title: "Reports & Analytics",
+          icon: "📈",
+          content: renderReports
+        },
+        settings: {
+          title: "System Settings",
+          icon: "⚙️",
+          content: renderSettings
+        },
+        backup: {
+          title: "Backup & Restore",
+          icon: "💾",
+          content: renderBackup
+        },
+        logs: {
+          title: "System Logs",
+          icon: "📋",
+          content: renderLogs
+        }
+      }
+    };
+
+    // ──────────── DARK MODE ────────────
+    function initTheme() {
+      const darkToggle = document.getElementById("darkToggle");
+      
+      if (APP.theme === "dark") {
+        document.documentElement.classList.add("dark");
+        darkToggle.textContent = "☀️";
+      }
+
+      darkToggle.addEventListener("click", () => {
+        const isDark = document.documentElement.classList.toggle("dark");
+        APP.theme = isDark ? "dark" : "light";
+        darkToggle.textContent = isDark ? "☀️" : "🌙";
+        localStorage.setItem("theme", APP.theme);
+      });
+    }
+
+    // ──────────── RESPONSIVE MENU ────────────
+    function initMenu() {
+      const menuToggle = document.getElementById("menuToggle");
+      const sidebar = document.getElementById("sidebar");
+
+      menuToggle.addEventListener("click", (e) => {
+        e.stopPropagation();
+        sidebar.classList.toggle("hidden");
+        APP.sidebarOpen = !APP.sidebarOpen;
+      });
+
+      // Close sidebar when clicking outside
+      document.addEventListener("click", (e) => {
+        if (window.innerWidth <= 1024 && 
+            !sidebar.contains(e.target) && 
+            !menuToggle.contains(e.target)) {
+          sidebar.classList.add("hidden");
+          APP.sidebarOpen = false;
+        }
+      });
+
+      // Close sidebar when link is clicked
+      document.querySelectorAll(".nav a").forEach(link => {
+        link.addEventListener("click", () => {
+          if (window.innerWidth <= 1024) {
+            sidebar.classList.add("hidden");
+            APP.sidebarOpen = false;
+          }
+        });
+      });
+
+      // Handle window resize
+      window.addEventListener("resize", () => {
+        if (window.innerWidth > 1024) {
+          sidebar.classList.remove("hidden");
+          APP.sidebarOpen = true;
+        } else if (APP.sidebarOpen && window.innerWidth <= 1024) {
+          sidebar.classList.add("hidden");
+          APP.sidebarOpen = false;
+        }
+      });
+    }
+
+    // ──────────── NAVIGATION SYSTEM ────────────
+    function navigate(event) {
+      event.preventDefault?.();
+      
+      const href = event.currentTarget?.getAttribute("href") || "#dashboard";
+      const page = href.substring(1) || "dashboard";
+      
+      if (!APP.pages[page]) return;
+
+      APP.currentPage = page;
+
+      // Update active link
+      document.querySelectorAll(".nav a").forEach(a => a.classList.remove("active"));
+      event.currentTarget?.classList.add("active");
+
+      // Update page title and content
+      updatePage();
+    }
+
+    async function updatePage() {
+      const page = APP.pages[APP.currentPage];
+      if (!page) return;
+
+      document.querySelector(".title").textContent = page.title;
+      
+      const content = document.querySelector(".content");
+      content.innerHTML = '<div class="panel" style="text-align: center; padding: 40px;"><div style="color: var(--muted);">Loading...</div></div>';
+
+      try {
+        const html = await page.content();
+        content.innerHTML = html;
+      } catch (error) {
+        console.error("Error rendering page:", error);
+        content.innerHTML = '<div class="panel"><div style="color: var(--error);">Error loading page. Please try again.</div></div>';
+      }
+
+      // Mark current link as active
+      const href = `#${APP.currentPage}`;
+      document.querySelectorAll(".nav a").forEach(a => {
+        a.classList.toggle("active", a.getAttribute("href") === href);
+      });
+    }
+
+    // ──────────── PAGE CONTENT RENDERERS ────────────
+    async function renderDashboard() {
+      const [books, users, borrowing, fines, reports] = await Promise.all([
+        fetchAPI("/books"),
+        fetchAPI("/users"),
+        fetchAPI("/borrowing"),
+        fetchAPI("/fines"),
+        fetchAPI("/reports")
+      ]);
+
+      const totalBooks = books?.length || 0;
+      const totalStudents = users?.filter(u => u.role === "Student").length || 0;
+      const overdueBooks = borrowing?.filter(b => b.status === "overdue").length || 0;
+      const pendingFines = fines?.filter(f => !f.paid).reduce((sum, f) => sum + (f.amount || 0), 0) || 0;
+      
+      const recentActivity = borrowing?.slice(-4).reverse() || [];
+
+      return `
+        <div style="display: grid; gap: 24px;">
+          <!-- KPI Cards -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+            <div class="panel" style="padding: 20px; text-align: center; border-left: 4px solid var(--accent);">
+              <div style="font-size: 32px; font-weight: 700; color: var(--accent);">${totalBooks}</div>
+              <div style="font-size: 12px; color: var(--muted); margin-top: 8px; text-transform: uppercase;">Total Books</div>
+            </div>
+
+            <div class="panel" style="padding: 20px; text-align: center; border-left: 4px solid #4caf50;">
+              <div style="font-size: 32px; font-weight: 700; color: #4caf50;">${totalStudents}</div>
+              <div style="font-size: 12px; color: var(--muted); margin-top: 8px; text-transform: uppercase;">Students</div>
+            </div>
+            <div class="panel" style="padding: 20px; text-align: center; border-left: 4px solid #ff9800;">
+              <div style="font-size: 32px; font-weight: 700; color: #ff9800;">${overdueBooks}</div>
+              <div style="font-size: 12px; color: var(--muted); margin-top: 8px; text-transform: uppercase;">Overdue Books</div>
+            </div>
+            <div class="panel" style="padding: 20px; text-align: center; border-left: 4px solid #2196f3;">
+              <div style="font-size: 32px; font-weight: 700; color: #2196f3;">₨${pendingFines.toLocaleString()}</div>
+              <div style="font-size: 12px; color: var(--muted); margin-top: 8px; text-transform: uppercase;">Pending Fines</div>
+            </div>
+          </div>
+
+          <!-- Activity Section -->
+          <div class="panel">
+            <h3 style="margin: 0 0 16px 0; color: var(--text); font-size: 16px;">Recent Activity</h3>
+            <div>
+              ${recentActivity.length > 0 ? recentActivity.map(item => `
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border);">
+                  <div>
+                    <div style="font-weight: 600; color: var(--text);">${item.status === "active" ? "Book Issued" : item.status === "returned" ? "Book Returned" : "Overdue Book"}</div>
+
+                    <div style="font-size: 12px; color: var(--muted); margin-top: 4px;">${item.userName || item.userId} - ${item.bookTitle}</div>
+                  </div>
+                    </div>
+                  </div>
+              `).join("") : `<div style="color: var(--muted); padding: 12px 0;">No activity yet.</div>`}
+
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    async function renderBooks() {
+      const books = await fetchAPI("/books");
+      
+      if (!books || books.length === 0) {
+        return `
+          <div class="panel">
+            <h3 style="margin: 0 0 16px 0; color: var(--text);">Book Catalog</h3>
+            <div style="padding: 40px; text-align: center; color: var(--muted);">No books found. Try seeding the database first.</div>
+          </div>
+        `;
+      }
+
+      return `
+        <div style="display: grid; gap: 24px;">
+          <div class="panel">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+              <h3 style="margin: 0; color: var(--text);">Book Catalog (${books.length} books)</h3>
+              <button style="padding: 8px 16px; background: var(--accent); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">+ Add Book</button>
+            </div>
+            <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+              <thead>
+                <tr style="border-bottom: 2px solid var(--border);">
+                  <th style="text-align: left; padding: 12px 0; color: var(--text); font-weight: 600;">Title</th>
+                  <th style="text-align: left; padding: 12px 0; color: var(--text); font-weight: 600;">Author</th>
+                  <th style="text-align: left; padding: 12px 0; color: var(--text); font-weight: 600;">Category</th>
+                  <th style="text-align: center; padding: 12px 0; color: var(--text); font-weight: 600;">Available</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${books.slice(0, 10).map(book => `
+                  <tr style="border-bottom: 1px solid var(--border);">
+                    <td style="padding: 12px 0; color: var(--text);">${book.title || "N/A"}</td>
+                    <td style="padding: 12px 0; color: var(--muted);">${book.author || "N/A"}</td>
+                    <td style="padding: 12px 0;"><span style="background: rgba(154,84,53,0.1); color: var(--accent); padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">${book.category || "Gen"}</span></td>
+                    <td style="padding: 12px 0; text-align: center; color: var(--text); font-weight: 600;">${book.availableCopies || book.totalCopies || 1}</td>
+                  </tr>
+                `).join("")}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    }
+
+    async function renderStudents() {
+      const users = await fetchAPI("/users");
+      const students = users?.filter(u => u.role === "Student") || [];
+      
+      return `
+        <div class="panel">
+          <h3 style="margin: 0 0 16px 0; color: var(--text);">Student Accounts</h3>
+          <p style="color: var(--muted); font-size: 13px;">Total Registered Students: <strong style="color: var(--text);">${students.length}</strong></p>
+          ${students.length > 0 ? `
+            <table style="width: 100%; margin-top: 20px; border-collapse: collapse; font-size: 13px;">
+              <thead>
+                <tr style="border-bottom: 2px solid var(--border);">
+                  <th style="text-align: left; padding: 12px 0; color: var(--text); font-weight: 600;">Name</th>
+                  <th style="text-align: left; padding: 12px 0; color: var(--text); font-weight: 600;">Email</th>
+                  <th style="text-align: left; padding: 12px 0; color: var(--text); font-weight: 600;">Student ID</th>
+                  <th style="text-align: left; padding: 12px 0; color: var(--text); font-weight: 600;">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${students.slice(0, 10).map(student => `
+                  <tr style="border-bottom: 1px solid var(--border);">
+                    <td style="padding: 12px 0; color: var(--text);">${student.name || "N/A"}</td>
+                    <td style="padding: 12px 0; color: var(--muted);">${student.email || "N/A"}</td>
+                    <td style="padding: 12px 0; color: var(--text);">${student.studentId || "N/A"}</td>
+                    <td style="padding: 12px 0;"><span style="background: rgba(76,175,80,0.1); color: #4caf50; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">${student.status || "active"}</span></td>
+                  </tr>
+                `).join("")}
+              </tbody>
+            </table>
+          ` : `
+            <div style="margin-top: 24px; padding: 40px; text-align: center; background: rgba(154,84,53,0.05); border-radius: 12px; color: var(--muted);">
+              No students found.
+            </div>
+
+          `}
+        </div>
+      `;
+    }
+
+    async function renderBorrowing() {
+      const borrowing = await fetchAPI("/borrowing");
+      
+      return `
+        <div class="panel">
+          <h3 style="margin: 0 0 16px 0; color: var(--text);">Borrowing Records</h3>
+          <div style="display: grid; gap: 12px; margin-bottom: 20px;">
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <input type="text" placeholder="Search records..." style="padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; flex: 1; min-width: 200px; color: var(--text); background: var(--panel);">
+              <button style="padding: 8px 16px; background: var(--accent); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">Filter</button>
+            </div>
+          </div>
+          ${borrowing && borrowing.length > 0 ? `
+            <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+              <thead>
+                <tr style="border-bottom: 2px solid var(--border);">
+                  <th style="text-align: left; padding: 12px 0; color: var(--text); font-weight: 600;">Student</th>
+                  <th style="text-align: left; padding: 12px 0; color: var(--text); font-weight: 600;">Book</th>
+                  <th style="text-align: left; padding: 12px 0; color: var(--text); font-weight: 600;">Issue Date</th>
+                  <th style="text-align: left; padding: 12px 0; color: var(--text); font-weight: 600;">Due Date</th>
+                  <th style="text-align: center; padding: 12px 0; color: var(--text); font-weight: 600;">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${borrowing.slice(0, 10).map(record => `
+                  <tr style="border-bottom: 1px solid var(--border);">
+                    <td style="padding: 12px 0; color: var(--text);">${record.userName || record.userId || "N/A"}</td>
+                    <td style="padding: 12px 0; color: var(--muted);">${record.bookTitle || "N/A"}</td>
+                    <td style="padding: 12px 0; color: var(--muted);">${record.issueDate || "N/A"}</td>
+                    <td style="padding: 12px 0; color: var(--muted);">${record.dueDate || "N/A"}</td>
+                    <td style="padding: 12px 0; text-align: center;">
+                      <span style="background: ${record.status === "returned" ? "rgba(76,175,80,0.1); color: #4caf50" : record.status === "overdue" ? "rgba(244,67,54,0.1); color: #f44336" : "rgba(33,150,243,0.1); color: #2196f3"}; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">${record.status || "pending"}</span>
+                    </td>
+                  </tr>
+                `).join("")}
+              </tbody>
+            </table>
+          ` : `
+            <div style="padding: 40px; text-align: center; background: rgba(154,84,53,0.05); border-radius: 12px; color: var(--muted);">
+              No borrowing records found.
+            </div>
+
+          `}
+        </div>
+      `;
+    }
+
+    function renderLibrarians() {
+      return `
+        <div class="panel">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <h3 style="margin: 0; color: var(--text);">Librarians & Staff</h3>
+            <button style="padding: 8px 16px; background: var(--accent); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">+ Add Librarian</button>
+          </div>
+            <div style="padding: 40px; text-align: center; background: rgba(154,84,53,0.05); border-radius: 12px; color: var(--muted);">
+              Staff management system coming soon.
+            </div>
+
+        </div>
+      `;
+    }
+
+    async function renderFines() {
+      const fines = await fetchAPI("/fines");
+      
+      const unpaidFines = fines?.filter(f => !f.paid).reduce((sum, f) => sum + (f.amount || 0), 0) || 0;
+      const collectedFines = fines?.filter(f => f.paid).reduce((sum, f) => sum + (f.amount || 0), 0) || 0;
+
+      return `
+        <div class="panel">
+          <h3 style="margin: 0 0 16px 0; color: var(--text);">Fine Management</h3>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px;">
+            <div style="padding: 16px; background: rgba(244,67,54,0.1); border-radius: 8px;">
+              <div style="font-size: 14px; color: #f44336; font-weight: 700;">₨${unpaidFines.toLocaleString()}</div>
+              <div style="font-size: 12px; color: var(--muted); margin-top: 4px;">Total Unpaid Fines</div>
+            </div>
+            <div style="padding: 16px; background: rgba(76,175,80,0.1); border-radius: 8px;">
+              <div style="font-size: 14px; color: #4caf50; font-weight: 700;">₨${collectedFines.toLocaleString()}</div>
+              <div style="font-size: 12px; color: var(--muted); margin-top: 4px;">Total Collected</div>
+            </div>
+          </div>
+          ${fines && fines.length > 0 ? `
+            <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+              <thead>
+                <tr style="border-bottom: 2px solid var(--border);">
+                  <th style="text-align: left; padding: 12px 0; color: var(--text); font-weight: 600;">Student</th>
+                  <th style="text-align: left; padding: 12px 0; color: var(--text); font-weight: 600;">Book</th>
+                  <th style="text-align: left; padding: 12px 0; color: var(--text); font-weight: 600;">Amount (₨)</th>
+                  <th style="text-align: center; padding: 12px 0; color: var(--text); font-weight: 600;">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${fines.slice(0, 8).map(fine => `
+                  <tr style="border-bottom: 1px solid var(--border);">
+                    <td style="padding: 12px 0; color: var(--text);">${fine.userName || fine.userId || "N/A"}</td>
+                    <td style="padding: 12px 0; color: var(--muted);">${fine.bookTitle || "N/A"}</td>
+                    <td style="padding: 12px 0; color: var(--text); font-weight: 600;">₨${(fine.amount || 0).toLocaleString()}</td>
+                    <td style="padding: 12px 0; text-align: center;">
+                      <span style="background: ${fine.paid ? "rgba(76,175,80,0.1); color: #4caf50" : "rgba(244,67,54,0.1); color: #f44336"}; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">${fine.paid ? "Paid" : "Unpaid"}</span>
+                    </td>
+                  </tr>
+                `).join("")}
+              </tbody>
+            </table>
+          ` : `
+            <div style="padding: 40px; text-align: center; background: rgba(154,84,53,0.05); border-radius: 12px; color: var(--muted);">
+              No fines found.
+            </div>
+
+          `}
+        </div>
+      `;
+    }
+
+    async function renderReports() {
+      const reports = await fetchAPI("/reports");
+      
+      const totalBooks = reports?.totalBooks || 0;
+      const totalStudents = reports?.totalStudents || 0;
+      const activeIssues = reports?.activeIssues || 0;
+      const overdueIssues = reports?.overdueIssues || 0;
+      const totalFines = reports?.totalFines || 0;
+      const paidFines = reports?.paidFines || 0;
+      const topBooks = reports?.topBooks || [];
+
+      return `
+        <div class="panel">
+          <h3 style="margin: 0 0 16px 0; color: var(--text);">Analytics & Reports</h3>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px;">
+            <div style="padding: 16px; background: rgba(33,150,243,0.1); border-radius: 8px;">
+              <div style="font-size: 14px; color: #2196f3; font-weight: 700;">${totalBooks}</div>
+              <div style="font-size: 12px; color: var(--muted); margin-top: 4px;">Total Books</div>
+            </div>
+            <div style="padding: 16px; background: rgba(76,175,80,0.1); border-radius: 8px;">
+              <div style="font-size: 14px; color: #4caf50; font-weight: 700;">${totalStudents}</div>
+              <div style="font-size: 12px; color: var(--muted); margin-top: 4px;">Total Students</div>
+            </div>
+            <div style="padding: 16px; background: rgba(255,152,0,0.1); border-radius: 8px;">
+              <div style="font-size: 14px; color: #ff9800; font-weight: 700;">${activeIssues}</div>
+              <div style="font-size: 12px; color: var(--muted); margin-top: 4px;">Active Issues</div>
+            </div>
+            <div style="padding: 16px; background: rgba(244,67,54,0.1); border-radius: 8px;">
+              <div style="font-size: 14px; color: #f44336; font-weight: 700;">${overdueIssues}</div>
+              <div style="font-size: 12px; color: var(--muted); margin-top: 4px;">Overdue Issues</div>
+            </div>
+          </div>
+
+          <div style="margin-bottom: 20px;">
+            <h4 style="margin: 0 0 12px 0; color: var(--text); font-size: 14px;">Fine Statistics</h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
+              <div style="padding: 12px; background: rgba(244,67,54,0.1); border-radius: 8px;">
+                <div style="font-size: 12px; color: #f44336; font-weight: 700;">₨${totalFines.toLocaleString()}</div>
+                <div style="font-size: 11px; color: var(--muted); margin-top: 4px;">Total Fines</div>
+              </div>
+              <div style="padding: 12px; background: rgba(76,175,80,0.1); border-radius: 8px;">
+                <div style="font-size: 12px; color: #4caf50; font-weight: 700;">₨${paidFines.toLocaleString()}</div>
+                <div style="font-size: 11px; color: var(--muted); margin-top: 4px;">Collected</div>
+              </div>
+            </div>
+          </div>
+
+          ${topBooks && topBooks.length > 0 ? `
+            <div>
+              <h4 style="margin: 0 0 12px 0; color: var(--text); font-size: 14px;">Top Books</h4>
+              <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+                <thead>
+                  <tr style="border-bottom: 2px solid var(--border);">
+                    <th style="text-align: left; padding: 8px 0; color: var(--text); font-weight: 600;">Title</th>
+                    <th style="text-align: center; padding: 8px 0; color: var(--text); font-weight: 600;">Borrows</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${topBooks.map(book => `
+                    <tr style="border-bottom: 1px solid var(--border);">
+                      <td style="padding: 8px 0; color: var(--text);">${book.title || "N/A"}</td>
+                      <td style="padding: 8px 0; text-align: center; color: var(--muted);">${book.borrows || 0}</td>
+                    </tr>
+                  `).join("")}
+                </tbody>
+              </table>
+            </div>
+          ` : `
+            <div style="padding: 30px; text-align: center; background: rgba(154,84,53,0.05); border-radius: 12px; color: var(--muted); font-size: 13px;">
+              Charts and detailed analytics coming soon.
+            </div>
+
+          `}
+        </div>
+      `;
+    }
+
+    function renderSettings() {
+      return `
+        <div class="panel">
+          <h3 style="margin: 0 0 20px 0; color: var(--text);">System Settings</h3>
+          <div style="display: grid; gap: 20px;">
+            <div style="padding-bottom: 20px; border-bottom: 1px solid var(--border);">
+              <label style="display: block; font-weight: 600; color: var(--text); margin-bottom: 8px;">Library Name</label>
+              <input type="text" value="Library LINK" style="width: 100%; max-width: 400px; padding: 10px; border: 1px solid var(--border); border-radius: 8px; color: var(--text); background: var(--panel);">
+            </div>
+            <div style="padding-bottom: 20px; border-bottom: 1px solid var(--border);">
+              <label style="display: block; font-weight: 600; color: var(--text); margin-bottom: 8px;">Max Books per Student</label>
+              <input type="number" value="3" style="width: 100%; max-width: 400px; padding: 10px; border: 1px solid var(--border); border-radius: 8px; color: var(--text); background: var(--panel);">
+            </div>
+            <div style="padding-bottom: 20px; border-bottom: 1px solid var(--border);">
+              <label style="display: block; font-weight: 600; color: var(--text); margin-bottom: 8px;">Fine per Day (₨)</label>
+              <input type="number" value="10" style="width: 100%; max-width: 400px; padding: 10px; border: 1px solid var(--border); border-radius: 8px; color: var(--text); background: var(--panel);">
+            </div>
+            <button style="padding: 10px 24px; background: var(--accent); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; width: fit-content;">Save Settings</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderBackup() {
+      return `
+        <div class="panel">
+          <h3 style="margin: 0 0 16px 0; color: var(--text);">Backup & Restore</h3>
+          <div style="display: grid; gap: 16px;">
+            <div style="padding: 20px; background: rgba(76,175,80,0.1); border-radius: 8px; border-left: 4px solid #4caf50;">
+              <div style="font-weight: 600; color: var(--text);">Last Backup</div>
+              <div style="font-size: 12px; color: var(--muted); margin-top: 4px;">Jun 17, 2026 at 2:30 AM</div>
+            </div>
+            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+              <button style="padding: 10px 24px; background: var(--accent); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">Create Backup Now</button>
+              <button style="padding: 10px 24px; background: transparent; color: var(--accent); border: 1px solid var(--accent); border-radius: 8px; cursor: pointer; font-weight: 600;">Download Backup</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderLogs() {
+      return `
+        <div class="panel">
+          <h3 style="margin: 0 0 16px 0; color: var(--text);">System Logs</h3>
+          <div style="background: var(--bg); padding: 16px; border-radius: 8px; max-height: 400px; overflow-y: auto; font-family: 'Courier New', monospace; font-size: 11px; color: var(--muted);">
+            <div>[2026-06-17 14:32:15] User logged in: admin@librarylink.edu.pk</div>
+            <div>[2026-06-17 14:30:42] Database sync completed</div>
+            <div>[2026-06-17 14:25:18] Book issued to student: CS-2021-001</div>
+            <div>[2026-06-17 14:20:05] Fine payment received from student: CS-2021-042</div>
+            <div>[2026-06-17 14:15:33] System backup initiated</div>
+            <div>[2026-06-17 14:10:12] New librarian registered: sara.q@librarylink.edu.pk</div>
+          </div>
+        </div>
+      `;
+    }
+
+    // ──────────── CLOCK & DATE ────────────
+    function initClock() {
+      function updateDateTime() {
+        const now = new Date();
+        const dateStr = now.toLocaleDateString("en-US", { 
+          year: "numeric", 
+          month: "short", 
+          day: "numeric" 
+        });
+        document.getElementById("currentDate").textContent = dateStr;
+      }
+
+      function updateSyncTime() {
+        const syncEl = document.getElementById("syncTime");
+        const now = new Date();
+        const minutes = now.getMinutes();
+        syncEl.textContent = minutes === 0 ? "Just now" : `${minutes} min ago`;
+      }
+
+      updateDateTime();
+      updateSyncTime();
+      setInterval(updateSyncTime, 60000);
+    }
+
+    // ──────────── INITIALIZATION ────────────
+    document.addEventListener("DOMContentLoaded", async () => {
+      initTheme();
+      initMenu();
+      initClock();
+      
+      // Seed database on first load
+      console.log("Checking database...");
+      const seedResult = await seedDatabase();
+      if (seedResult?.message) {
+        console.log("Database status:", seedResult.message);
+      }
+      
+      // Load initial page
+      updatePage();
+
+      // Handle initial page hash
+      window.addEventListener("hashchange", () => {
+        const page = window.location.hash.substring(1) || "dashboard";
+        if (APP.pages[page]) {
+          APP.currentPage = page;
+          updatePage();
+        }
+      });
+    });
+  </script>
+</body>
+</html>
+<script type="module">
+import { createClient }
+from 'https://esm.sh/@supabase/supabase-js'
+
+const supabase = createClient(
+    'YOUR_SUPABASE_URL',
+    'YOUR_SUPABASE_ANON_KEY'
+)
+</script>

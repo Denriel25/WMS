@@ -1,0 +1,130 @@
+.staff-page {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  color: white;
+}
+
+.staff-page h1 {
+  margin: 0;
+  font-size: 2.2rem;
+}
+
+.staff-page p {
+  margin: 0;
+  color: #b7b1ca;
+}
+
+.staff-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.staff-card,
+.simple-card {
+  padding: 18px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.staff-table-wrap {
+  overflow-x: auto;
+}
+
+.staff-table {
+  width: 100%;
+  min-width: 600px;
+  border-collapse: collapse;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.staff-table th,
+.staff-table td {
+  padding: 14px;
+  text-align: left;
+}
+
+.staff-form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.staff-form input {
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+}
+
+.staff-form button {
+  grid-column: 1 / -1;
+  padding: 14px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(to right, #a14cf5, #4a86ff);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.staff-message {
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(20, 160, 90, 0.16);
+  color: #72e4a3;
+}
+
+.simple-page {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  color: white;
+}
+
+.simple-page h1 {
+  margin: 0;
+  font-size: 2.2rem;
+}
+
+.staff-search-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 0 14px;
+  max-width: 420px;
+}
+
+.staff-search-box input {
+  flex: 1;
+  height: 48px;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: white;
+}
+
+.staff-search-box input::placeholder {
+  color: #a39cbe;
+}
+
+.simple-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+@media (max-width: 900px) {
+  .staff-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .staff-form {
+    grid-template-columns: 1fr;
+  }
+}

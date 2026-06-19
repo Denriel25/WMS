@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sidebar</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      background: #121212;
+      font-family: "Poppins", sans-serif;
+      color: #fff;
+    }
+
+    .sidebar {
+      width: 224px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(175deg, #9A5435 0%, #7A3F25 40%, #5C3020 75%, #6B6464 100%);
+      box-shadow: 4px 0 24px rgba(90, 40, 20, 0.25);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .brand img {
+      height: 36px;
+      object-fit: contain;
+      filter: invert(1) brightness(3) opacity(0.75);
+      mix-blend-mode: screen;
+    }
+
+    .role-panel {
+      margin: 16px 12px 0;
+      padding: 14px 12px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .role-panel p {
+      margin: 0;
+    }
+
+    .role-panel p:first-child {
+      font-size: 10px;
+      color: rgba(255, 246, 239, 0.45);
+      letter-spacing: 0.05em;
+    }
+
+    .role-panel p:last-child {
+      margin-top: 6px;
+      font-size: 12px;
+      color: #fff6ef;
+      font-weight: 500;
+    }
+
+    .nav {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 10px;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .nav button {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      border: none;
+      border-radius: 18px;
+      padding: 12px 14px;
+      background: transparent;
+      color: rgba(255, 246, 239, 0.6);
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 12px;
+      font-weight: 400;
+    }
+
+    .nav button:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .nav button.active {
+      background: linear-gradient(90deg, rgba(255, 246, 239, 0.22), rgba(255, 246, 239, 0.08));
+      color: #fff6ef;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+      font-weight: 500;
+    }
+
+    .nav button svg {
+      opacity: 0.6;
+      color: inherit;
+      min-width: 15px;
+      min-height: 15px;
+    }
+
+    .nav button.active svg {
+      opacity: 1;
+      color: #ebc09b;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: #ebc09b;
+    }
+
+    .footer {
+      padding: 14px 16px;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.2);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      color: rgba(255, 246, 239, 0.35);
+      font-size: 10px;
+      letter-spacing: 0.05em;
+    }
+  </style>
+</head>
+<body>
+  <aside class="sidebar" id="sidebar"></aside>
+
+  <script>
+    const logoSrc = "../../imports/image-4.png";
+
+    const icons = {
+      grid: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>`,
+      book: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>`,
+      search: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`,
+      history: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.95"/></svg>`,
+      alert: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`,
+      user: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`,
+      users: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`,
+      up: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>`,
+      down: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`,
+      chart: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>`,
+      bell: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>`,
+      settings: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`,
+      dollar: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>`,
+      db: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>`,
+    };
+
+    const roleLabel = {
+      Student: "🎓 Student",
+      Librarian: "📚 Librarian",
+      Admin: "🛡️ Admin",
+    };
+
+    const navSets = {
+      Student: [
+        { id: "s-dashboard", label: "Dashboard", icon: icons.grid },
+        { id: "s-catalog", label: "Book Catalog", icon: icons.search },
+        { id: "s-available", label: "Available Books", icon: icons.book },
+        { id: "s-history", label: "Borrowing History", icon: icons.history },
+        { id: "s-fines", label: "Due Dates & Fines", icon: icons.alert },
+        { id: "s-notifications", label: "Notifications", icon: icons.bell },
+        { id: "s-profile", label: "My Profile", icon: icons.user },
+        { id: "s-settings", label: "Settings", icon: icons.settings },
+      ],
+      Librarian: [
+        { id: "dashboard", label: "Dashboard", icon: icons.grid },
+        { id: "book-catalog", label: "Book Catalog", icon: icons.search },
+        { id: "book-management", label: "Book Management", icon: icons.book },
+        { id: "student-management", label: "Student Management", icon: icons.users },
+        { id: "issuance", label: "Book Issuance", icon: icons.up },
+        { id: "return", label: "Return Management", icon: icons.down },
+        { id: "fine-management", label: "Fine Management", icon: icons.dollar },
+        { id: "notifications", label: "Notifications", icon: icons.bell },
+        { id: "reports", label: "Reports", icon: icons.chart },
+        { id: "profile", label: "Profile", icon: icons.user },
+        { id: "settings", label: "Settings", icon: icons.settings },
+      ],
+      Admin: [
+        { id: "a-dashboard", label: "Dashboard", icon: icons.grid },
+        { id: "a-librarians", label: "Manage Librarians", icon: icons.users },
+        { id: "a-settings", label: "System Settings", icon: icons.settings },
+        { id: "a-reports", label: "All Reports", icon: icons.chart },
+        { id: "a-backup", label: "Backup & Restore", icon: icons.db },
+        { id: "a-notifications", label: "Notifications", icon: icons.bell },
+        { id: "a-profile", label: "Profile", icon: icons.user },
+      ],
+    };
+
+    const role = "Librarian";
+    let currentPage = "dashboard";
+
+    const sidebar = document.getElementById("sidebar");
+
+    function renderSidebar() {
+      const navItems = navSets[role] || navSets.Librarian;
+
+      sidebar.innerHTML = `
+        <div class="brand">
+          <img src="${logoSrc}" alt="Library Link" />
+        </div>
+        <div class="role-panel">
+          <p>SIGNED IN AS</p>
+          <p>${roleLabel[role] || role}</p>
+        </div>
+        <nav class="nav">
+          ${navItems
+            .map(
+              (item) => `
+                <button type="button" class="${item.id === currentPage ? "active" : ""}" data-id="${item.id}">
+                  <span class="icon">${item.icon}</span>
+                  <span class="label">${item.label}</span>
+                  ${item.id === currentPage ? '<span class="dot"></span>' : ""}
+                </button>
+              `,
+            )
+            .join("")}
+        </nav>
+        <div class="footer">© 2026 Library LINK</div>
+      `;
+
+      sidebar.querySelectorAll("button[data-id]").forEach((button) => {
+        button.addEventListener("click", () => {
+          currentPage = button.dataset.id;
+          renderSidebar();
+        });
+      });
+    }
+
+    renderSidebar();
+  </script>
+</body>
+</html>
+<script type="module">
+import { createClient }
+from 'https://esm.sh/@supabase/supabase-js'
+
+const supabase = createClient(
+    'YOUR_SUPABASE_URL',
+    'YOUR_SUPABASE_ANON_KEY'
+)
+</script>

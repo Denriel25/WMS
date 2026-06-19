@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>LibraryLink Dashboard</title>
+
+  <link rel="stylesheet" href="./style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+  <div class="app">
+    <!-- SIDEBAR -->
+    <div class="sidebar" id="sidebar">
+      <div class="logo">📚 LibraryLink</div>
+
+      <button class="toggle" onclick="toggleSidebar()">☰</button>
+
+      <a href="index.html" class="active">Dashboard</a>
+      <a href="pages/books.html">Books</a>
+      <a href="pages/users.html">Users</a>
+      <a href="pages/borrowing.html">Borrowing</a>
+      <a href="pages/fines.html">Fines</a>
+      <a href="pages/notifications.html">Notifications</a>
+      <a href="pages/reports.html">Reports</a>
+      <a href="pages/settings.html">Settings</a>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main">
+      <!-- TOPBAR -->
+      <div class="topbar glass">
+        <h2>Dashboard</h2>
+
+        <input class="search" placeholder="Search anything..." />
+
+        <div class="actions">
+          <button onclick="openModal()">+ Add</button>
+          <div class="avatar">A</div>
+        </div>
+      </div>
+
+      <!-- PAGE CONTENT -->
+      <div class="page fade" id="page">
+        <section class="page-content">
+          <div class="cards">
+            <div class="card">
+              <h3>Total Books</h3>
+              <p>2,450</p>
+            </div>
+
+            <div class="card">
+              <h3>Borrowed</h3>
+              <p>321</p>
+            </div>
+
+            <div class="card">
+              <h3>Overdue</h3>
+              <p>27</p>
+            </div>
+
+            <div class="card">
+              <h3>Users</h3>
+              <p>1,248</p>
+            </div>
+          </div>
+
+          <div class="dashboard-grid">
+            <div class="table-card">
+              <h3>Recent Borrowing</h3>
+              <table>
+                <tr>
+                  <th>User</th>
+                  <th>Book</th>
+                  <th>Status</th>
+                </tr>
+                <tr>
+                  <td>John</td>
+                  <td>Atomic Habits</td>
+                  <td>Borrowed</td>
+                </tr>
+              </table>
+            </div>
+
+            <div class="table-card">
+              <h3>Notifications</h3>
+              <ul class="notification-list">
+                <li>5 books overdue today.</li>
+                <li>2 new members registered.</li>
+                <li>15 books returned.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL -->
+  <div class="modal" id="modal">
+    <div class="modal-box">
+      <h3>Add Item</h3>
+      <input placeholder="Title" />
+      <input placeholder="Description" />
+      <button onclick="closeModal()">Save</button>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast"></div>
+
+  <script>
+    // Minimal UI wiring for index.html (sidebar + modal)
+    function toggleSidebar() {
+      const el = document.getElementById('sidebar');
+      if (!el) return;
+      el.classList.toggle('collapsed');
+    }
+
+    const modal = document.getElementById('modal');
+    let lastFocusedEl = null;
+
+    function openModal() {
+      if (!modal) return;
+      lastFocusedEl = document.activeElement;
+      modal.classList.add('show');
+      // focus first input if present
+      const firstInput = modal.querySelector('input, button');
+      if (firstInput) firstInput.focus();
+    }
+
+    function closeModal() {
+      if (!modal) return;
+      modal.classList.remove('show');
+      if (lastFocusedEl && typeof lastFocusedEl.focus === 'function') lastFocusedEl.focus();
+    }
+
+    document.addEventListener('click', (e) => {
+      if (!modal || !modal.classList.contains('show')) return;
+      // click outside modal-box closes
+      const box = modal.querySelector('.modal-box');
+      if (box && !box.contains(e.target)) closeModal();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (!modal || !modal.classList.contains('show')) return;
+      if (e.key === 'Escape') closeModal();
+    });
+
+    // Hook dashboard sidebar toggle if button exists (inline onclick already works, but keep safe)
+    window.toggleSidebar = toggleSidebar;
+    window.openModal = openModal;
+    window.closeModal = closeModal;
+  </script>
+</body>
+</html>
+
