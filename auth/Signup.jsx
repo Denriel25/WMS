@@ -55,6 +55,7 @@ function Signup() {
         email: formData.email,
         password: formData.password,
         options: {
+          emailRedirectTo: `${window.location.origin}/`,
           data: {
             name: formData.name,
             role: formData.role,
@@ -68,11 +69,9 @@ function Signup() {
         return;
       }
 
-      if (!data.user) {
-        setMessage("Signup success. Check your email for verification.");
-      } else {
-        setMessage("Signup success. You can now login.");
-      }
+      setMessage(
+        "Signup success. A confirmation email has been sent. Check your inbox or spam folder."
+      );
 
       setTimeout(() => {
         navigate("/");
