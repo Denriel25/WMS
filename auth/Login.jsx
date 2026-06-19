@@ -63,6 +63,8 @@ function Login() {
 
       if (userRole === "admin") {
         navigate("/admin/dashboard");
+      } else if (userRole === "student") {
+        navigate("/student/dashboard");
       } else {
         navigate("/staff/dashboard");
       }

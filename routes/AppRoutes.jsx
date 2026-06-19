@@ -25,6 +25,9 @@ import AdminLayout from "../components/AdminLayout";
 import StaffLayout from "../components/StaffLayout";
 import ProtectedRoute from "./ProtectedRoute";
 import PublicRoute from "./PublicRoute";
+import StudentDashboard from "../student/StudentDashboard";
+import StudentInventory from "../student/StudentInventory";
+import StudentHistory from "../student/StudentHistory";
 
 function AppRoutes() {
   return (
@@ -201,6 +204,31 @@ function AppRoutes() {
               <StaffLayout>
                 <StaffHistory />
               </StaffLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/student/dashboard"
+          element={
+            <ProtectedRoute allowedRole="student">
+              <StudentDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/student/inventory"
+          element={
+            <ProtectedRoute allowedRole="student">
+              <StudentInventory />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/student/history"
+          element={
+            <ProtectedRoute allowedRole="student">
+              <StudentHistory />
             </ProtectedRoute>
           }
         />

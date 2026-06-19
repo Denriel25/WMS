@@ -12,6 +12,10 @@ function PublicRoute({ children }) {
     return <Navigate to="/staff/dashboard" replace />;
   }
 
+  if (isLoggedIn && userRole === "student") {
+    return <Navigate to="/student/dashboard" replace />;
+  }
+
   return children;
 }
 

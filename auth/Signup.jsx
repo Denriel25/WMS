@@ -127,6 +127,7 @@ function Signup() {
               onChange={(e) => handleChange("role", e.target.value)}
               className="auth-select"
             >
+              <option value="student">Student</option>
               <option value="staff">Staff</option>
               <option value="admin">Admin</option>
             </select>
